@@ -1,0 +1,190 @@
+type Query {
+  echo(text: String!): String!
+  node(id: ID!): Node
+  viewer: User!
+}
+
+type Mutation {
+  createQuote(input: CreateQuoteInput!): CreateQuotePayload!
+  updateQuote(id: ID!, input: UpdateQuoteInput!): UpdateQuotePayload!
+  deleteQuote(quoteId: ID!): DeleteQuotePayload!
+  createQuoteList(input: CreateQuoteListInput!): CreateQuoteListPayload!
+  updateQuoteList(
+    id: ID!
+    input: UpdateQuoteListInput!
+  ): UpdateQuoteListPayload!
+  deleteQuoteList(quoteListId: ID!): DeleteQuoteListPayload!
+  createQuotee(input: CreateQuoteeInput): CreateQuoteePayload!
+  updateQuotee(id: ID!, input: UpdateQuoteeInput!): UpdateQuoteePayload!
+  deleteQuotee(quoteeId: ID!): DeleteQuoteePayload!
+}
+
+"""
+RFC 3339
+"""
+scalar Date
+
+input CreateQuoteInput {
+  quoteText: String!
+  quoteDate: Date!
+  locationText: String
+  quoteContext: String
+  quoteeIds: [ID!]
+}
+
+input CreateQuoteeInput {
+  name: String!
+}
+
+input UpdateQuoteeInput {
+  name: String!
+}
+
+input UpdateQuoteListInput {
+  name: String
+  addQuotes: [ID!]
+  removeQuotes: [ID!]
+}
+
+input UpdateQuoteQuoteeInput {
+  add: [ID!]
+  remove: [ID!]
+}
+
+input UpdateQuoteInput {
+  quoteText: String
+  quoteDate: Date
+  locationText: String
+  quoteContext: String
+  quotees: UpdateQuoteQuoteeInput
+}
+
+input CreateQuoteListInput {
+  name: String!
+}
+
+interface DisplayableError {
+  message: String!
+}
+
+type DeleteQuoteError implements DisplayableError {
+  message: String!
+}
+
+type UpdateQuoteError implements DisplayableError {
+  message: String!
+}
+
+type UpdateQuoteeError implements DisplayableError {
+  message: String!
+}
+
+type CreateQuoteeError implements DisplayableError {
+  message: String!
+}
+
+type DeleteQuoteeError implements DisplayableError {
+  message: String!
+}
+
+type DeleteQuoteListError implements DisplayableError {
+  message: String!
+}
+
+type UpdateQuoteListError implements DisplayableError {
+  message: String!
+}
+
+type CreateQuoteError implements DisplayableError {
+  message: String!
+}
+
+type CreateQuoteListError implements DisplayableError {
+  message: String!
+}
+
+type DeleteQuotePayload {
+  userErrors: [DeleteQuoteError!]!
+}
+
+type CreateQuotePayload {
+  quote: Quote
+  userErrors: [CreateQuoteError!]!
+}
+
+type CreateQuoteePayload {
+  quotee: Quotee
+  userErrors: [CreateQuoteePayload!]!
+}
+
+type UpdateQuoteePayload {
+  quotee: Quotee
+  userErrors: [UpdateQuoteeError!]!
+}
+
+type DeleteQuoteePayload {
+  userErrors: [DeleteQuoteeError!]!
+}
+
+type UpdateQuotePayload {
+  quote: Quote
+  userErrors: [UpdateQuoteError!]!
+}
+
+type DeleteQuoteListPayload {
+  userErrors: [DeleteQuoteListError!]!
+}
+
+type UpdateQuoteListPayload {
+  quoteList: ShareableQuoteList
+  userErrors: [UpdateQuoteListError!]!
+}
+
+type CreateQuoteListPayload {
+  quoteList: ShareableQuoteList
+  userErrors: [CreateQuoteListError!]!
+}
+
+interface Node {
+  id: ID!
+}
+
+type Quote implements Node {
+  id: ID!
+  quoteText: String!
+  createdAt: Date!
+  quoteDate: Date!
+  locationText: String
+  quoteContext: String
+  quotees: [Quotee!]!
+}
+
+type Quotee implements Node {
+  id: ID!
+  name: String!
+}
+
+type User implements Node {
+  id: ID!
+  quotes: QuoteList!
+  quotees: [Quotee!]!
+  quoteLists: [ShareableQuoteList!]!
+}
+
+interface QuoteList {
+  size: Int!
+  quotes: [Quote!]!
+}
+
+type ShareableQuoteList implements Node & QuoteList {
+  id: ID!
+  name: String!
+  createdAt: Date!
+  quotes: [Quote!]!
+  size: Int!
+}
+
+type UnlinkedQuoteList implements QuoteList {
+  quotes: [Quote!]!
+  size: Int!
+}

@@ -11,20 +11,26 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
+    "scheme": "quotesapp",
     "ios": {
       "supportsTablet": true
     },
     "android": {
+      "package": "nl.jrdie.temp",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": ["android.permission.ACCESS_NETWORK_STATE"]
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "1e2dbd9e-25f8-4fd8-928b-2c6955b4d80f"
+      }
     }
   }
 }
